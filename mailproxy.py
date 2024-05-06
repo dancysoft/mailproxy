@@ -54,7 +54,10 @@ class MailProxyHandler:
                     envelope.original_content
                 )
             finally:
-                s.quit()
+                try:
+                    s.quit()
+                except smtplib.SMTPServerDisconnected:
+                    pass
         except (OSError, smtplib.SMTPException) as e:
             logging.exception('got %s', e.__class__)
             # All recipients were refused. If the exception had an associated
